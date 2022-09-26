@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.netlistener.bean.NetListenerMessage;
@@ -17,15 +18,15 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView tvCurrentNet;
     private TextView isSuccess;
+    private Intent service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EventBus.getDefault().register(this);
         tvCurrentNet = findViewById(R.id.tv_current_net);
         isSuccess = findViewById(R.id.tv_is_ping_success);
-        startService(new Intent(this, NetListenerService.class));
+        service = new Intent(this, NetListenerService.class);
 //        NetListenerService service = new NetListenerService(new NetListenerCallback() {
 //            @Override
 //            void currentNet(String string) {
@@ -42,6 +43,23 @@ public class MainActivity extends AppCompatActivity {
         // 当前组件创建时注册网络观察者
 //        NetworkStateWatcher.getDefault(this).register(this);
 //        isSuccess.setText("是否ping成功" + NetworkUtils.ping("110.242.68.4"));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("zyzyzy", "activity   onResume");
+        startService(service);
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("zyzyzy", "activity   onPause");
+        stopService(service);
     }
 
     @Override

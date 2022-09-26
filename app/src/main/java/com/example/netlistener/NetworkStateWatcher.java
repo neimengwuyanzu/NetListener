@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 import com.example.netlistener.util.NetworkUtils;
 
@@ -27,6 +28,7 @@ public final class NetworkStateWatcher {
     }
 
     private static void registerReceiver(Context context) {
+        Log.d("zyzyzy", "注册广播");
         if (context == null) {
             return;
         }
@@ -91,6 +93,9 @@ public final class NetworkStateWatcher {
             mObservers.clear();
             mObservers = null;
         }
+        if (sWatcher != null){
+            sWatcher = null;
+        }
         unRegisterReceiver(context);
     }
 
@@ -100,6 +105,7 @@ public final class NetworkStateWatcher {
      * @param context Android上下文
      */
     private void unRegisterReceiver(Context context) {
+        Log.d("zyzyzy", "注销广播接收者");
         if (context != null) {
             context.getApplicationContext().unregisterReceiver(sReceiver);
         }
